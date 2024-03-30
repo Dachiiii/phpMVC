@@ -33,12 +33,6 @@ class Request {
 		return $_FILES;
 	}
 
-	public static function POST($class): array {
-		$submited = self::_post();
-		$files = self::_files();
-		return Validation::concat_posts_files($submited,$files,$class);
-
-	}
 	public static function user() {
 		if (isset($_SESSION['loggedin'])){
 			$object = new User();
