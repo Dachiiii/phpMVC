@@ -3,10 +3,11 @@
 namespace App\Http;
 
 class Migrations extends Model {
-	public const array TABLES = ["users","user_tokens"];
+	public const array TABLES = ["users","user_tokens","user_reset_tokens"];
 	private const array MIGRATION = [
 		self::TABLES[0] => 'user_table',
 		self::TABLES[1] => 'user_tokens_table',
+		self::TABLES[2] => 'user_reset_tokens_table'
 	];
 	private function user_table() {
 		$this->sql("CREATE TABLE ".self::TABLES[0]." (
@@ -25,6 +26,16 @@ class Migrations extends Model {
 			user_id INT NOT NULL,
 			expiry DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE);");
+	}
+	private function user_reset_tokens_table() {
+		$this->sql("CREATE TABLE ".self::TABLES[2]." (
+			id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+			user_id INT NOT NULL,
+			user_email VARCHAR(255) NOT NULL,
+			reset_token_hash VARCHAR(255) NOT NULL,
+			reset_token_expires_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE);");
+
 	}
 
 	public function table_already_exists(string $table_name): bool {
