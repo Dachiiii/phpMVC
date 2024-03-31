@@ -81,7 +81,12 @@ class Request {
 	public static function url() {
 		return (empty($_SERVER['HTTP_X_FORWARDED_PROTO']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
 	}
+<<<<<<< HEAD
 	public static function request_uri() {
 		return parse_url($_SERVER['REQUEST_URI'])['path'];
 	}
 }
+=======
+
+}
+>>>>>>> f3156abef1d2dd1f51773ea979384c15da95a1b1
