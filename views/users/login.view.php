@@ -12,6 +12,7 @@
 				<p style="color: red;"><?=$error;?></p>
 			<?php endforeach; ?>
 		<?php endif; ?>
+		<a href="<?=$url;?>/users/forgot-password">Forgot Password?</a>
 	</div>
 </main>
 <?php require BASE_PATH . '/views/assets/footer.view.php' ?>

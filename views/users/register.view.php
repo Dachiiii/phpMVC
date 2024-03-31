@@ -2,9 +2,10 @@
 <main>
 	<div>
 		<form method="POST">
-			<input type="text" name="username" required>
-			<input type="password" name="password1" required>
-			<input type="password" name="password2" required>
+			<input type="text" name="username" required placeholder="username">
+			<input type="email" name="email" required placeholder="email">
+			<input type="password" name="password1" required placeholder="password">
+			<input type="password" name="password2" required placeholder="Confirm password">
 			<input type="submit" value="Register">
 		</form>
 		<?php if(isset($errors)) : ?>

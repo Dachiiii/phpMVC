@@ -15,6 +15,7 @@ class Response {
 	public function send() {
 		if (!empty($this->html)) {
 			$this->content['user'] = Request::user();
+			$this->content['url'] = Request::url();
 			extract($this->content);
 			return require BASE_PATH . "/views/{$this->html}.view.php";
 		} else {

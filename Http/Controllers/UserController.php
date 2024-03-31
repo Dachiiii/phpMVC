@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 use App\Http\Response;
 use App\Http\Request;
 use App\Models\User;
+use App\Http\Auth\ForgotPassword;
+use App\Http\Auth\ChangePassword;
+use App\Models\ResetToken;
+use App\Http\Auth\Mail;
 
 class UserController {
 
@@ -50,5 +54,37 @@ class UserController {
 		$user->logout();
 		Response::redirect('users/login');
 		return new Response('users/login');
+	}
+
+	public function forgotPassword(): Response {
+		return new Response('users/password_recovery/forgot-password');
+	}
+	public function forgotPasswordReset(): Response {
+		$forgot = new ForgotPassword(Request::_post());
+		if ($forgot->generate_user_reset_token()) {
+			$email = new Mail();
+			$mail = $email->setup(true);
+			$mail->addAddress($forgot->get_email());
+			$mail->Subject = $email::PASSWORD_RESET_EMAIL_SUBJECT;
+			$url = $forgot->generate_token_url();
+			$mail->Body = "Click <a href='$url'>here</a> to recover your password.";
+			$email->sendMail($mail);
+		};
+		return new Response('users/password_recovery/submited-password-recovery');
+	}
+
+	public function recoverPassword(string $token): Response {
+		$token_object = new ResetToken();
+		if (!$token_object->get_user_by_reset_token($token)) {
+			Response::status_code(404);
+			return new Response('404');
+		} else {
+			return new Response('users/password_recovery/recover-password');
+		}
+	}
+	public function recoverPasswordSave(string $token): Response {
+		$changePassword = new ChangePassword($token);
+		$changePassword->change(Request::_post());
+		return new Response('users/password_recovery/password_updated_successfully');
 	}
 }

@@ -10,11 +10,11 @@ use App\Http\Middlewares\Middleware;
 class User extends Model {
 	protected string $table = 'users';
 	protected const string REGISTRATION_USERNAME_FIELD = 'username';
+	protected const string REGISTRATION_EMAIL_FIELD = 'email';
 	protected const string REGISTRATION_PASSWORD1_FIELD = 'password1';
 	protected const string REGISTRATION_PASSWORD2_FIELD = 'password2';
 	protected const string REMEMBER_ME = 'rememberMe';
 	private const string PASSWORD = 'password';
-	private const string LOGIN_USING = self::REGISTRATION_USERNAME_FIELD;
 	private const array FIELD_PASSWORD = [self::REGISTRATION_PASSWORD1_FIELD => self::PASSWORD];
 	private const int PASSWORD_MAX_LENGTH = 25;
 	private const int PASSWORD_MIN_LENGTH = 8;
@@ -22,6 +22,7 @@ class User extends Model {
 	public static function fillable() {
 		return [
 			self::REGISTRATION_USERNAME_FIELD,
+			self::REGISTRATION_EMAIL_FIELD,
 			self::REGISTRATION_PASSWORD1_FIELD, 
 			self::REGISTRATION_PASSWORD2_FIELD
 		];
@@ -29,15 +30,12 @@ class User extends Model {
 
 	private array $valid_table_fields = [
 		self::REGISTRATION_USERNAME_FIELD,
+		self::REGISTRATION_EMAIL_FIELD,
 		self::FIELD_PASSWORD[self::REGISTRATION_PASSWORD1_FIELD]
 	];
 
 	public static function field($field) {
 		return constant('self::'.$field);
-	}
-
-	private function unique_fields() {
-		return [self::REGISTRATION_USERNAME_FIELD];
 	}
 	
 	private function rules(array $fields) {
@@ -70,7 +68,6 @@ class User extends Model {
 
 				if (empty($result)) {
 					$new_user = $this->create($inputs);
-					$this->save($inputs);
 					return 1;
 				} else {
 					return $result;
@@ -82,7 +79,7 @@ class User extends Model {
 	}
 
 	public function login(string $login, string $password, string|bool $rememberMe = false) {
-		$user = $this->get([self::LOGIN_USING => $login]);
+		$user = $this->get([$_SERVER['LOGIN_USING'] => $login]);
 		if ($user) {
 			session_regenerate_id();
 			$verifed = password_verify($password, $user[self::PASSWORD]);
@@ -120,7 +117,6 @@ class User extends Model {
 
 	private function save(array $user) {
 		$_SESSION['loggedin'] = true;
-		// $_SESSION[self::LOGIN_USING] = $user[self::LOGIN_USING];
 		$_SESSION['user_id'] = $user['id'];
 	}
 

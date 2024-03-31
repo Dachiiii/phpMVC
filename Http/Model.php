@@ -9,9 +9,7 @@ class Model extends DB {
 		$query = "SELECT * FROM $this->table WHERE ";
 
 		foreach ($keys as $key) {
-
 			$query .= $key . ' = :' . $key . ' && ';
-
 		}
 		return trim($query,' && ');
 	}
@@ -32,6 +30,18 @@ class Model extends DB {
 	public function delete(int $id, string $id_field = 'id') {
 		$data[$id_field] = $id;
 		return $this->query("DELETE FROM $this->table WHERE id = :id",$data)->fetch();
+	}
+
+	public function update(int $id, $data, string $id_field = 'id') {
+		$query = "UPDATE $this->table SET ";
+		foreach (array_keys($data) as $key) {
+			$query .= $key . ' = :' . $key . ', ';
+		}
+		$query = trim($query,', ');
+		$query .= " WHERE $id_field = :$id_field";
+		// dd($query);
+		$data[$id_field] = $id;
+		return $this->query($query,$data)->fetch();
 	}
 
 	public function get(array $data) {

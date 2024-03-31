@@ -19,4 +19,11 @@ return [
 	['GET','/users/logout', [UserController::class,'logout'],[Middleware::AUTH]],
 	['POST','/users/logout', [UserController::class,'logoutHandle'],[Middleware::AUTH]],
 
+	// Password Recovery...
+	['GET','/users/forgot-password', [UserController::class,'forgotPassword'],[Middleware::EVERYONE]],
+	['POST','/users/recover-password', [UserController::class,'forgotPasswordReset'],[Middleware::EVERYONE]],
+
+	['GET','/users/recover-password/{token}',[UserController::class,'recoverPassword'],[Middleware::EVERYONE]],
+	['POST','/users/recover-password/{token}',[UserController::class,'recoverPasswordSave'],[Middleware::EVERYONE]],
+
 ];

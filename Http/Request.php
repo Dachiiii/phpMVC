@@ -33,12 +33,6 @@ class Request {
 		return $_FILES;
 	}
 
-	public static function POST($class): array {
-		$submited = self::_post();
-		$files = self::_files();
-		return Validation::concat_posts_files($submited,$files,$class);
-
-	}
 	public static function user() {
 		if (isset($_SESSION['loggedin'])){
 			$object = new User();
@@ -87,5 +81,7 @@ class Request {
 	public static function url() {
 		return (empty($_SERVER['HTTP_X_FORWARDED_PROTO']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]";
 	}
-
+	public static function request_uri() {
+		return parse_url($_SERVER['REQUEST_URI'])['path'];
+	}
 }
