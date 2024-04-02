@@ -67,8 +67,7 @@ class UserController {
 			$mail->addAddress($forgot->get_email());
 			$mail->Subject = $email::PASSWORD_RESET_EMAIL_SUBJECT;
 			$url = $forgot->generate_token_url();
-			$mail->Body = "Click <a href='$url'>here</a> to recover your password.";
-			$email->sendMail($mail);
+			$email->sendMail($mail,$url);
 		};
 		return new Response('users/password_recovery/submited-password-recovery');
 	}

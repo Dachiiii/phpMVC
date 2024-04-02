@@ -39,7 +39,10 @@ class Mail {
 		return $mail;
 	}
 
-	public function sendMail($mail) {
+	public function sendMail(PHPMailer $mail, string $url) {
+		$html = file_get_contents(BASE_PATH . "/views/users/password_recovery/mail.view.php");
+		$html = str_replace("{{URL}}", $url, $html);
+		$mail->Body = $html;
 		try {
 			$mail->send();
 		} catch (Exception $e) {

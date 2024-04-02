@@ -21,6 +21,6 @@ class Middleware {
 	];
 
 	const middlewares = [
-		// RememberMe::class,
+		// RememberMe::class,	/* Uncomment this when DB and tables are setup. */
 	];
 }
